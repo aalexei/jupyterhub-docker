@@ -1,42 +1,46 @@
-version: '3'
+version: '3.9'
 
 services:
+  proxy:
+    build: ./app/proxy
+    container_name: proxy
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./app/proxy/traefik.yml:/etc/traefik/traefik.yml
+      - ./app/proxy/tls.yml:/etc/traefik/tls.yml
+      - ./app/proxy/certs/:/etc/certs/
+
   jupyterhub:
-    build: jupyterhub
-    image: jupyterhub_img
+    build: ./app/jupyterhub
     container_name: jupyterhub
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - jupyterhub_data:/srv/jupyterhub
+    - "/var/run/docker.sock:/var/run/docker.sock:rw"
+    - "jupyterhub-data:/data:rw"
+    - "./app/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
     environment:
-      - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
+      - ACTIVE_SERVER_LIMIT=${ACTIVE_SERVER_LIMIT}
+      - ACTIVITY_RESOLUTION=${ACTIVITY_RESOLUTION}
+      - MEM_LIMIT=${MEM_LIMIT}
+      - CPU_LIMIT=${CPU_LIMIT}
+      - DOCKER_NOTEBOOK_IMAGE=notebook_img
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
-      - HUB_IP=jupyterhub
-      - HOST
+      - HOST=${HOST}
+      - JUPYTERHUB_IDLE_CULLER_TIMEOUT=${IDLE_CULLER_TIMEOUT}
+      - DEBUG=${DEBUG}
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:${HOST}"
-    restart: on-failure
+      - "traefik.http.routers.jupyterhub.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.jupyterhub.tls=true"
 
-  jupyterlab:
-    build: jupyterlab
-    image: jupyterlab_img
-    container_name: jupyterlab-throaway
+  notebook:
+    build: ./app/notebook
+    image: notebook_img
+    container_name: notebook-throwaway
     network_mode: none
     command: echo
 
-  reverse-proxy:
-    image: traefik
-    container_name: reverse-proxy
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    volumes:
-      - ./reverse-proxy/traefik.toml:/etc/traefik/traefik.toml
-      - /etc/certs:/etc/certs
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: on-failure
-
 volumes:
-  jupyterhub_data:
+  jupyterhub-data:
