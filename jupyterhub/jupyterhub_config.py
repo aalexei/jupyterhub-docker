@@ -12,9 +12,9 @@ c = get_config()
 
 
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
-c.JupyterHub.active_server_limit = int(os.environ.get("ACTIVE_SERVER_LIMIT", 100))
-c.JupyterHub.activity_resolution = int(os.environ.get("ACTIVITY_RESOLUTION", 300))
-c.DockerSpawner.mem_limit = os.environ.get("MEM_LIMIT", "1G")
+c.JupyterHub.active_server_limit = int(os.environ.get("ACTIVE_SERVER_LIMIT", 60))
+c.JupyterHub.activity_resolution = int(os.environ.get("ACTIVITY_RESOLUTION", 30))
+c.DockerSpawner.mem_limit = os.environ.get("MEM_LIMIT", "4G")
 c.DockerSpawner.cpu_limit = int(os.environ.get("CPU_LIMIT", 1))
 c.DockerSpawner.image = os.environ.get("DOCKER_NOTEBOOK_IMAGE", "notebook_img")
 c.DockerSpawner.cmd = os.environ.get("DOCKER_SPAWN_CMD", "start-singleuser.sh")
@@ -39,20 +39,16 @@ c.DockerSpawner.volumes = {"jupyterhub-user-{username}": notebook_dir}
 
     
 
-debug = os.environ.get("DEBUG", False)
-if debug:
-    c.Authenticator.admin_users = {"admin"}
-    c.JupyterHub.authenticator_class = "dummy"
-    c.DockerSpawner.debug = True
-else:
-    c.Authenticator.admin_users = {"admin"}
-    c.JupyterHub.authenticator_class = 'jhub_cas_authenticator.cas_auth.CASAuthenticator'
-    c.CASAuthenticator.cas_login_url = 'https://cas.prz.edu.pl/cas-server/login'
-    c.CASLocalAuthenticator.cas_logout_url = 'https://cas.prz.edu.pl/cas-server/logout'
-    c.CASAuthenticator.cas_service_url = 'https://%s/hub/login' % os.environ['HOST']
-    c.CASAuthenticator.cas_service_validate_url = 'https://cas.prz.edu.pl/cas-server/serviceValidate'
-    #c.CASAuthenticator.cas_required_attribs = {('memberOf', 'jupyterhub_users')}
-
+# debug = os.environ.get("DEBUG", False)
+# if debug:
+#     c.Authenticator.admin_users = {"admin"}
+#     c.JupyterHub.authenticator_class = "dummy"
+#     c.DockerSpawner.debug = True
+# else:
+c.JupyterHub.authenticator_class = 'jupyterhub.auth.PAMAuthenticator'
+#c.PAMAuthenticator.open_sessions = False
+c.Authenticator.admin_users = {'admin'}
+    
 
 ## ----------------------------------------
 # JupyterHub Idle Culler
