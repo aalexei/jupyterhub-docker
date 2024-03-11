@@ -11,7 +11,7 @@ which was originally forked from https://github.com/defeo/jupyterhub-docker
 - HTTPS proxy;
 - Auto culling of inactive user-servers after 3600 seconds
 
-# Deployment steps
+## Deployment steps
 
 - Install Docker: https://docs.docker.com/engine/install/
 - Add user to the docker group. NOTE: This user will be the admin of the deployed jupyter hub
@@ -51,6 +51,28 @@ Other changes you may like to make:
   software you like. Do not forget to change
   [`jupyterhub/jupyterhub_config.py`](jupyterhub/jupyterhub_config.py)
   accordingly, in particular the *"user data persistence"* section.
+
+
+## Adding new users
+
+In order to create and add new users adapt the scripts `utils/create_users.sh` and `utils/add_users.sh`, respectively.
+The scripts need to be executed in the docker container `jupyterhub`
+
+```
+docker exec -it jupyterhub /bin/bash
+cd utils
+./create_users.sh
+./add_users.sh users_list.txt
+```
+
+## Adding new packages to the environment
+
+Edit the file notebook/environment.yml. Then rebuild the notebook image
+
+```
+docker compose build notebook
+docker compose up -d notebook
+```
 
 
 ## Learn more

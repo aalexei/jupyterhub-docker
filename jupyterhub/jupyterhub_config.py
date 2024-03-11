@@ -27,7 +27,7 @@ c.JupyterHub.hub_port = 9090
 c.JupyterHub.cookie_secret_file = "/data/jupyterhub_cookie_secret" # Persist hub data on volume mounted inside container
 c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
 
-notebook_dir = os.environ.get("DOCKER_NOTEBOOK_DIR", "/home/jovyan")
+notebook_dir = os.environ.get("DOCKER_NOTEBOOK_DIR", "/home/user")
 c.DockerSpawner.notebook_dir = notebook_dir
 
 c.DockerSpawner.extra_create_kwargs = {'user': 'root'}
