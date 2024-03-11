@@ -21,6 +21,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:rw"
       - "jupyterhub-data:/data:rw"
       - "./jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
+      - "./utils:/srv/jupyterhub/utils"
     environment:
       - ACTIVE_SERVER_LIMIT=${ACTIVE_SERVER_LIMIT}
       - ACTIVITY_RESOLUTION=${ACTIVITY_RESOLUTION}
