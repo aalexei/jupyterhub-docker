@@ -1,11 +1,34 @@
 # Dockerfile for JupyterLab
-# Jupyterhub version: 3.1.1
+# base version
 
-FROM jupyter/datascience-notebook:hub-3.1.1
+FROM quay.io/jupyter/base-notebook:lab-4.1.4
+
+LABEL maintainer="Tarun Chadha, tarunchadha23@gmail.com"
 
 # JupyterHub Version
-ARG JUPYTERHUB_VERSION=3.1.1
+ARG JUPYTERLAB_VERSION=4.1.4
+
+USER root
+
+# APT packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+USER $NB_UID
+
+COPY environment.yml /tmp/environment.yml
 
 # Install packages
-RUN pip3 install --no-cache \
-    jupyterlab-language-pack-pl-PL
+# Conda packages
+RUN conda env update --name base --file /tmp/environment.yml && \
+    conda clean --all -y && \
+    fix-permissions $CONDA_DIR
+
+ENV CPATH=$CONDA_DIR/include
+
+RUN fix-permissions $CONDA_DIR
+
+# Add conda env hook
+COPY ./conda-activate.sh /usr/local/bin/before-notebook.d/

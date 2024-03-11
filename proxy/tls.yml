@@ -2,5 +2,5 @@ tls:
   stores:
     default:
       defaultCertificate:
-        certFile: "/etc/certs/cert-host.pem"
-        keyFile: "/etc/certs/cert-host-key.pem" 
+        certFile: "/etc/certs/host.crt"
+        keyFile: "/etc/certs/host.key" 

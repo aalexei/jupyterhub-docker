@@ -3,6 +3,9 @@
 
 FROM jupyterhub/jupyterhub:3.1.1
 
+# Create admin user
+RUN useradd -rm -d /home/admin -s /bin/bash -g root -G sudo -u 1001 admin
+
 # Install packages
 RUN pip install \
     # Dockerspawner for JupyterHub
@@ -14,4 +17,5 @@ RUN pip install \
 
 # Copy configuration file
 COPY ./jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+
 CMD ["jupyterhub", "-f", "/srv/jupyterhub/jupyterhub_config.py"]

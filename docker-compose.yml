@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   proxy:
-    build: ./app/proxy
+    build: ./proxy
     container_name: proxy
     ports:
       - "80:80"
@@ -10,17 +10,17 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - ./app/proxy/traefik.yml:/etc/traefik/traefik.yml
-      - ./app/proxy/tls.yml:/etc/traefik/tls.yml
-      - ./app/proxy/certs/:/etc/certs/
+      - ./proxy/traefik.yml:/etc/traefik/traefik.yml
+      - ./proxy/tls.yml:/etc/traefik/tls.yml
+      - ./proxy/certs/:/etc/certs/
 
   jupyterhub:
-    build: ./app/jupyterhub
+    build: ./jupyterhub
     container_name: jupyterhub
     volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock:rw"
-    - "jupyterhub-data:/data:rw"
-    - "./app/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+      - "jupyterhub-data:/data:rw"
+      - "./jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
     environment:
       - ACTIVE_SERVER_LIMIT=${ACTIVE_SERVER_LIMIT}
       - ACTIVITY_RESOLUTION=${ACTIVITY_RESOLUTION}
@@ -36,7 +36,7 @@ services:
       - "traefik.http.routers.jupyterhub.tls=true"
 
   notebook:
-    build: ./app/notebook
+    build: ./notebook
     image: notebook_img
     container_name: notebook-throwaway
     network_mode: none
