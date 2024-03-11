@@ -24,15 +24,15 @@ openssl req -new -x509 -sha256 -days 365 -key host.key -out host.crt
 
 The generated key-certificate pair must be copied into the following location:
 ```
-cp host* ./reverse-proxy/certs/
+cp host* ./proxy/certs/
 ```
 
 - In [`.env`](.env), set the variable `HOST` to the name of the server you
   intend to host your deployment on.
-- In [`reverse-proxy/tls.yml`](reverse-proxy/tls.yml), edit
+- In [`proxy/tls.yml`](proxy/tls.yml), edit
   the paths in `certFile` and `keyFile` and point them to your own TLS
   certificates. Possibly edit the `volumes` section in the
-  `reverse-proxy` service in
+  `proxy` service in
   [`docker-compose.yml`](docker-compose.yml).
 
 ```
