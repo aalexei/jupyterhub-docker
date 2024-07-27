@@ -36,6 +36,10 @@ c.DockerSpawner.volumes = {
     "jupyterhub-user-{username}": notebook_dir,
     "jupyterhub-shared": "/Users/mq20072890/notebooks-shared"}
 
+#
+# Authentication
+#
+
 # use GitHub OAuthenticator for local users
 c.JupyterHub.authenticator_class = 'oauthenticator.LocalGitHubOAuthenticator'
 c.GitHubOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
@@ -45,6 +49,7 @@ c.LocalAuthenticator.create_system_users = True
 
 # specify users and admin
 c.Authenticator.allowed_users = {'aalexei'}
+c.Authenticator.allow_existing_users = False
 c.Authenticator.admin_users = {'aalexei'}
 
 # start single-user notebook servers in ~/assignments,
