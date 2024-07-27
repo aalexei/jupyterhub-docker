@@ -86,8 +86,8 @@ post](https://opendreamkit.org/2018/10/17/jupyterhub-docker/).
 Once you are ready, build and launch the application with
 
 ```
-docker-compose build --no-cache
-docker-compose up -d
+docker compose build --no-cache
+docker compose up -d
 ```
 
 Read the [Docker Compose manual](https://docs.docker.com/compose/) to
