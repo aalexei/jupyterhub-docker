@@ -13,28 +13,37 @@ services:
       - ./proxy/tls.yml:/etc/traefik/tls.yml
       - ./proxy/certs/:/etc/certs/
 
+  # Configuration for Proxy+Hub
   jupyterhub:
-    build: ./jupyterhub
+    build: ./jupyterhub  # Build the container from this folder.
     container_name: jupyterhub
-    volumes:
+    image: jupyterhub_img
+    volumes:  # Mount host paths or named volmes.
       - "/var/run/docker.sock:/var/run/docker.sock:rw"
       - "jupyterhub-data:/data:rw"
       - "./jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
       - "./utils:/srv/jupyterhub/utils"
     environment:
+      - DOCKER_NOTEBOOK_IMAGE=notebook_img
+      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - HUB_IP=jupyterhub
       - ACTIVE_SERVER_LIMIT=${ACTIVE_SERVER_LIMIT}
       - ACTIVITY_RESOLUTION=${ACTIVITY_RESOLUTION}
       - MEM_LIMIT=${MEM_LIMIT}
       - CPU_LIMIT=${CPU_LIMIT}
-      - DOCKER_NOTEBOOK_IMAGE=notebook_img
-      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - NOTEBOOK_DIR=${NOTEBOOK_DIR}
+      - NOTEBOOK_SHARED_DIR=${NOTEBOOK_SHARED_DIR}
       - HOST=${HOST}
       - JUPYTERHUB_IDLE_CULLER_TIMEOUT=${IDLE_CULLER_TIMEOUT}
-      - DEBUG=${DEBUG}
+      - OAUTH_CALLBACK_URL=${OAUTH_CALLBACK_URL}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      #- DEBUG=${DEBUG}
     labels:
       - "traefik.http.routers.jupyterhub.rule=Host(`${HOST}`)"
       - "traefik.http.routers.jupyterhub.tls=true"
 
+  # Configuration for the single-user servers
   notebook:
     build: ./notebook
     image: notebook_img

@@ -1,15 +1,15 @@
 cvxpy
+picos
 qutip
 pydot
-ipympl
-ipywidgets
-scikit-learn
-openpyxl
-numba
-numexpr
-altair
-cython
 pyzx
 qiskit
 PennyLane
 
+jupyterlab-darkside-theme
+jupyterlab-ariakedark-theme
+jupyterlab_materialdarker
+theme-darcula
+jupyterlab_theme_solarized_dark
+
+jupyterlab-vim

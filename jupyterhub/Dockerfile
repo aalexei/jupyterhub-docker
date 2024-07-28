@@ -14,7 +14,8 @@ RUN pip install \
     # JupyterHub CAS Authenticator
     jhub_cas_authenticator \
     # JupyterHub Idle Culler
-    jupyterhub-idle-culler
+    jupyterhub-idle-culler \
+    oauthenticator
 
 # Copy configuration file
 COPY ./jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
