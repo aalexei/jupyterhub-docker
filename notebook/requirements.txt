@@ -5,6 +5,9 @@ pydot
 pyzx
 qiskit
 PennyLane
+multiprocess
+
+perceval-quandela
 
 jupyterlab-darkside-theme
 jupyterlab-ariakedark-theme
@@ -13,3 +16,4 @@ theme-darcula
 jupyterlab_theme_solarized_dark
 
 jupyterlab-vim
+jupyterlab-github
